@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: gp-postgres
+    environment:
+      POSTGRES_DB: gerenciador_projetos
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 54321
+    ports:
+      - "5432:5432"
+    volumes:
+      - gp_data:/var/lib/postgresql/data
+
+volumes:
+  gp_data:
