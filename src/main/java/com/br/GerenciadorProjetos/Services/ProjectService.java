@@ -6,6 +6,7 @@ import com.br.GerenciadorProjetos.Dtos.ProjectResponseDto;
 import com.br.GerenciadorProjetos.Entity.Project;
 import com.br.GerenciadorProjetos.Mappers.ProjectMapper;
 import com.br.GerenciadorProjetos.Repository.ProjectRepository;
+import com.br.GerenciadorProjetos.Repository.Specification.ProjectSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,8 @@ public class ProjectService {
     }
 
     public Page<ProjectResponseDto> getProjectByFilter(ProjectFilterDto filter, Pageable pageable){
-
-        return null; //todo
+        return repository.findAll(ProjectSpecification.entityFilters(filter),pageable)
+                .map(mapper::toResponseDto);
     }
 
     public ProjectResponseDto createProject(ProjectRequestDto requestDto){
