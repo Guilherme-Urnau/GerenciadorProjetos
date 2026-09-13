@@ -26,8 +26,7 @@ public class ProjectController {
 
     @GetMapping
     public Page<ProjectResponseDto> getAllWithFilters(ProjectFilterDto filter, @PageableDefault Pageable pageable){
-        service.getProjectByFilter(filter,pageable);
-        return null; //todo
+        return service.getProjectByFilter(filter,pageable);
     }
 
     @PostMapping
