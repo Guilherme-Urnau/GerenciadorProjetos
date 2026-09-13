@@ -30,14 +30,14 @@ public class ProjectController {
         return null; //todo
     }
 
-    @PutMapping
+    @PostMapping
     public ProjectResponseDto createProject(@Valid @RequestBody ProjectRequestDto dto){
         ProjectResponseDto responseDto = service.createProject(dto);
         return responseDto;
     }
 
-    @PostMapping("/{projectId}")
-    public ProjectResponseDto updatProject(@PathVariable Long projectId, @Valid @RequestBody ProjectRequestDto dto){
+    @PutMapping("/{projectId}")
+    public ProjectResponseDto updateProject(@PathVariable Long projectId, @Valid @RequestBody ProjectRequestDto dto){
         ProjectResponseDto responseDto = service.updateProject(projectId, dto);
         return responseDto;
     }
