@@ -18,27 +18,33 @@ public class ProjectController {
 
     private final ProjectService service;
 
+    @GetMapping("/{projectId}")
+    public ProjectResponseDto getProjectById(@PathVariable Long projectId) {
+        ProjectResponseDto responseDto = service.getProjectById(projectId);
+        return responseDto;
+    }
+
     @GetMapping
     public Page<ProjectResponseDto> getAllWithFilters(ProjectFilterDto filter, @PageableDefault Pageable pageable){
-        service.getProject(filter,pageable);
+        service.getProjectByFilter(filter,pageable);
         return null; //todo
     }
 
     @PutMapping
     public ProjectResponseDto createProject(@Valid @RequestBody ProjectRequestDto dto){
-        service.createProject(dto);
-
-        return null; //todo
+        ProjectResponseDto responseDto = service.createProject(dto);
+        return responseDto;
     }
 
-    @PostMapping
-    public ProjectResponseDto updatProject(@Valid @RequestBody ProjectRequestDto dto){
-        return null; //todo
+    @PostMapping("/{projectId}")
+    public ProjectResponseDto updatProject(@PathVariable Long projectId, @Valid @RequestBody ProjectRequestDto dto){
+        ProjectResponseDto responseDto = service.updateProject(projectId, dto);
+        return responseDto;
     }
 
     @DeleteMapping("/{projectId}")
     public void deleteProject(@PathVariable Long projectId){
-        return; //todo
+        service.deleteProject(projectId);
     }
 
 }
