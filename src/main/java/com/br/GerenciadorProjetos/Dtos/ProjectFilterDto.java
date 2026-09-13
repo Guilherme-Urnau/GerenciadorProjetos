@@ -17,7 +17,7 @@ public record ProjectFilterDto(
 
         LocalDate estimatedEndDate,
 
-        LocalDate ActualEndDate,
+        LocalDate actualEndDate,
 
         BigDecimal totalBudget,
 

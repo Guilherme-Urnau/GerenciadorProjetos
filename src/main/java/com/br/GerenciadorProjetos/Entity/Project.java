@@ -28,7 +28,9 @@ public class Project {
 
     private String description;
 
-    private Long manager;
+    @ManyToOne
+    @JoinColumn(name = "manager_id",nullable = false)
+    private ProjectMember manager;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -36,6 +38,5 @@ public class Project {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<ProjectMember> members = new ArrayList<>();
-
 
 }
