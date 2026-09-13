@@ -2,16 +2,11 @@ package com.br.GerenciadorProjetos.Repository.Specification;
 
 import com.br.GerenciadorProjetos.Dtos.ProjectFilterDto;
 import com.br.GerenciadorProjetos.Entity.Project;
-import com.br.GerenciadorProjetos.Enums.ProjectStatus;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
-
 import java.awt.*;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class ProjectSpecification {
 
