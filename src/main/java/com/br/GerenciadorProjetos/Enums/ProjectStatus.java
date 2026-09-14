@@ -2,6 +2,8 @@ package com.br.GerenciadorProjetos.Enums;
 
 import com.br.GerenciadorProjetos.Entity.Project;
 
+import java.util.Arrays;
+
 public enum ProjectStatus {
 
     EM_ANALIZE(1,"EM ANÁLIZE"),
@@ -19,6 +21,13 @@ public enum ProjectStatus {
     ProjectStatus(int order, String description) {
         this.order = order;
         this.description = description;
+    }
+
+    public static ProjectStatus getEnum(Integer order) {
+        return Arrays.stream(values())
+                .filter(status -> status.order.equals(order))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Status não encontrado."));
     }
 
 }
