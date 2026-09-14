@@ -4,11 +4,13 @@ import com.br.GerenciadorProjetos.Enums.MemberRole;
 import jakarta.persistence.*;
 
 @Entity
-public class ProjectMember {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String name;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
