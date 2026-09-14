@@ -1,5 +1,6 @@
 package com.br.GerenciadorProjetos.Enums;
 
+import com.br.GerenciadorProjetos.Dtos.ProjectRequestDto;
 import com.br.GerenciadorProjetos.Entity.Project;
 
 import java.util.Arrays;
@@ -28,6 +29,17 @@ public enum ProjectStatus {
                 .filter(status -> status.order.equals(order))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Status não encontrado."));
+        //todo melhorar erros e lembrar do controller advice
+    }
+
+    public static void validStatusChange(ProjectStatus incomingStatus, ProjectStatus persistedStatus) {
+        if(incomingStatus.order == persistedStatus.order+1)
+            return;
+        if(incomingStatus.order == -1)
+            return;
+
+        throw new IllegalArgumentException("Essa alteração de status não pode ser realizada.");
+         //todo melhorar erros e lembrar do controller advice
     }
 
 }
