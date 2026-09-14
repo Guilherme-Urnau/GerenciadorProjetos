@@ -2,6 +2,8 @@ package com.br.GerenciadorProjetos.Entity;
 
 import com.br.GerenciadorProjetos.Enums.ProjectStatus;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 public class Project {
 
     @Id
@@ -30,13 +34,13 @@ public class Project {
 
     @ManyToOne
     @JoinColumn(name = "manager_id",nullable = false)
-    private ProjectMember manager;
+    private Member manager;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ProjectStatus projectStatus;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<ProjectMember> members = new ArrayList<>();
+    private List<Member> members = new ArrayList<>();
 
 }
