@@ -47,7 +47,7 @@ public class ProjectService {
     public ProjectResponseDto updateProject(Long projectId, ProjectRequestDto requestDto){
         Project entity = projectRepository.findById(projectId).orElseThrow(
                 () -> new EntityNotFoundException("Projeto não encontrado, atualização cancelada."));
-        ProjectStatus.validStatusChange(requestDto,entity);
+        ProjectStatus.validStatusChange(requestDto.status(),entity.getProjectStatus());
         mapper.updateEntityFromDto(requestDto,entity);
         connectManager(requestDto,entity);
 
