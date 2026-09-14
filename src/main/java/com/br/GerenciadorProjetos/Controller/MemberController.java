@@ -34,7 +34,7 @@ public class MemberController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MemberResponseDto createMember(@Valid @RequestBody MemberRequestDto requestDto){
+    public MemberResponseDto createMember(@Valid @RequestBody MemberRequestDto requestDto) throws Exception {
         return memberService.createMember(requestDto);
     }
 }
