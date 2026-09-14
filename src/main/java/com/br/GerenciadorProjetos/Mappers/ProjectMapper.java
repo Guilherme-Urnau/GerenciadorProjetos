@@ -13,7 +13,6 @@ public interface ProjectMapper {
     @Mapping(target = "manager", ignore = true)
     Project toProjectEntity(ProjectRequestDto requestDto);
 
-    @Mapping(target = "manager", ignore = true)
     ProjectResponseDto toResponseDto(Project entity);
 
     @Mapping(target = "manager", ignore = true)
