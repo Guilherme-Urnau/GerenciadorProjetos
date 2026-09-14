@@ -1,11 +1,16 @@
 package com.br.GerenciadorProjetos.Controller;
 
-import com.br.GerenciadorProjetos.Dtos.ProjectRequestDto;
-import com.br.GerenciadorProjetos.Entity.ProjectMember;
+import com.br.GerenciadorProjetos.Dtos.MemberRequestDto;
+import com.br.GerenciadorProjetos.Dtos.MemberResponseDto;
+import com.br.GerenciadorProjetos.Entity.Member;
+import com.br.GerenciadorProjetos.Services.MemberService;
 import jakarta.validation.Valid;
+import jdk.jshell.Snippet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,18 +18,23 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MemberController {
 
+    private final MemberService memberService;
+
     @GetMapping
-    public Page<ProjectMember> getMembers(Pageable pageable){
-        return memberService.getAllMembers();
+    @ResponseStatus(HttpStatus.OK)
+    public Page<MemberResponseDto> getMembers(Pageable pageable, HttpMethod httpMethod){
+        return memberService.getAllMembers(pageable);
     }
 
     @GetMapping("/{memberId}")
-    public ProjectMember getMemberById(@PathVariable("memberId") Long memberId){
+    @ResponseStatus(HttpStatus.OK)
+    public MemberResponseDto getMemberById(@PathVariable("memberId") Long memberId){
         return memberService.getMemberById(memberId);
     }
 
     @PostMapping
-    public ProjectMember createMember(@Valid @RequestBody memberRequestDto requestDto){
+    @ResponseStatus(HttpStatus.CREATED)
+    public MemberResponseDto createMember(@Valid @RequestBody MemberRequestDto requestDto){
         return memberService.createMember(requestDto);
     }
 }
