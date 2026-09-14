@@ -1,12 +1,9 @@
 package com.br.GerenciadorProjetos.Dtos;
 
-import com.br.GerenciadorProjetos.Entity.ProjectMember;
-import com.br.GerenciadorProjetos.Enums.ProjectStatus;
+import com.br.GerenciadorProjetos.Entity.Member;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -37,6 +34,5 @@ public record ProjectRequestDto(
         @NotNull
         Long manager,
 
-        @NotEmpty
-        List<ProjectMember> members
+        List<Member> members
 ) {}
