@@ -2,8 +2,12 @@ package com.br.GerenciadorProjetos.Entity;
 
 import com.br.GerenciadorProjetos.Enums.MemberRole;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class Member {
 
     @Id
