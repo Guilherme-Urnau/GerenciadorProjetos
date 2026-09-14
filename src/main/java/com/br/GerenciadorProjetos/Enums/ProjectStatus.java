@@ -23,7 +23,7 @@ public enum ProjectStatus {
         this.description = description;
     }
 
-    public static ProjectStatus getEnum(Integer order) {
+    public static ProjectStatus getByOrder(Integer order) {
         return Arrays.stream(values())
                 .filter(status -> status.order.equals(order))
                 .findFirst()
