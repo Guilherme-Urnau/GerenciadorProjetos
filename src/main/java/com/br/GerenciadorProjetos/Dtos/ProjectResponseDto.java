@@ -9,7 +9,7 @@ import java.util.List;
 
 public record ProjectResponseDto(
 
-        Long projectId,
+        Long id,
 
         String name,
 
@@ -23,7 +23,7 @@ public record ProjectResponseDto(
 
         String description,
 
-        Long manager,
+        Member manager,
 
         ProjectStatus projectStatus,
 

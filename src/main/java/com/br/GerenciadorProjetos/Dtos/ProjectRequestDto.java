@@ -1,6 +1,7 @@
 package com.br.GerenciadorProjetos.Dtos;
 
 import com.br.GerenciadorProjetos.Entity.Member;
+import com.br.GerenciadorProjetos.Enums.ProjectStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,6 +34,8 @@ public record ProjectRequestDto(
 
         @NotNull
         Long manager,
+
+        ProjectStatus status,
 
         List<Member> members
 ) {}
