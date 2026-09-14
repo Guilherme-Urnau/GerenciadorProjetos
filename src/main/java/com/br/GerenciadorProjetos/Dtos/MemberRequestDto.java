@@ -10,10 +10,7 @@ public record MemberRequestDto(
         @NotBlank
         String name,
 
-        @NotNull
-        Long projectId,
-
         @NotBlank
-        String memberRole
+        String role
 
 ) {  }
