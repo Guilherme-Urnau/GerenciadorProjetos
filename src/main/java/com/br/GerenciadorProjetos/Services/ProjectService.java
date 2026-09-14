@@ -5,6 +5,7 @@ import com.br.GerenciadorProjetos.Dtos.ProjectFilterDto;
 import com.br.GerenciadorProjetos.Dtos.ProjectResponseDto;
 import com.br.GerenciadorProjetos.Entity.Member;
 import com.br.GerenciadorProjetos.Entity.Project;
+import com.br.GerenciadorProjetos.Enums.ProjectStatus;
 import com.br.GerenciadorProjetos.Mappers.ProjectMapper;
 import com.br.GerenciadorProjetos.Repository.MemberRepository;
 import com.br.GerenciadorProjetos.Repository.ProjectRepository;
@@ -38,6 +39,7 @@ public class ProjectService {
     public ProjectResponseDto createProject(ProjectRequestDto requestDto){
         Project entity = mapper.toProjectEntity(requestDto);
         connectManager(requestDto,entity);
+        entity.setProjectStatus(ProjectStatus.getByOrder(1));
         projectRepository.save(entity);
         return mapper.toResponseDto(entity);
     }
@@ -45,8 +47,10 @@ public class ProjectService {
     public ProjectResponseDto updateProject(Long projectId, ProjectRequestDto requestDto){
         Project entity = projectRepository.findById(projectId).orElseThrow(
                 () -> new EntityNotFoundException("Projeto não encontrado, atualização cancelada."));
+        ProjectStatus.validStatusChange(requestDto,entity);
         mapper.updateEntityFromDto(requestDto,entity);
         connectManager(requestDto,entity);
+
         projectRepository.save(entity);
         return mapper.toResponseDto(entity);
     }
