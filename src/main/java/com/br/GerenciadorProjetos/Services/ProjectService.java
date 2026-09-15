@@ -5,6 +5,7 @@ import com.br.GerenciadorProjetos.Dtos.ProjectFilterDto;
 import com.br.GerenciadorProjetos.Dtos.ProjectResponseDto;
 import com.br.GerenciadorProjetos.Entity.Member;
 import com.br.GerenciadorProjetos.Entity.Project;
+import com.br.GerenciadorProjetos.Enums.MemberRole;
 import com.br.GerenciadorProjetos.Enums.ProjectStatus;
 import com.br.GerenciadorProjetos.Mappers.ProjectMapper;
 import com.br.GerenciadorProjetos.Repository.MemberRepository;
@@ -67,6 +68,9 @@ public class ProjectService {
     private void connectManager(ProjectRequestDto requestDto, Project projectEntity){
          Member memberEntity = memberRepository.findById(requestDto.manager())
                  .orElseThrow(() -> new EntityNotFoundException("Gerente não encontrado."));
+         if(memberEntity.getRole() != MemberRole.GERENTE)
+             throw new IllegalArgumentException("Gerente do projeto deve estar cadastrado como GERENTE");
+            //todo controller advice
          projectEntity.setManager(memberEntity);
     }
 
