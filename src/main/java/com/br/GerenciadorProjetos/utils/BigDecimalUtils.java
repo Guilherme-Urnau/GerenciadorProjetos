@@ -22,5 +22,9 @@ public final class BigDecimalUtils {
     public static Boolean isLessThanOrEqualTo(BigDecimal first, BigDecimal second) {
         return first.compareTo(second) <= 0;
     }
+
+    public static Boolean isBetween(BigDecimal min, BigDecimal max, BigDecimal between) {
+        return between.compareTo(min) >= 0 && between.compareTo(max) <= 0;
+    }
 }
 
