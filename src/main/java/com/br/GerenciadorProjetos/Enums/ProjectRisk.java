@@ -28,7 +28,7 @@ public enum ProjectRisk {
             return ALTO_RISCO;
         if(totalMonths > MESES_ALTO)
             return ALTO_RISCO;
-        if(BigDecimalUtils.isBetween(ORCAMENTO_ALTO, ORCAMENTO_MEDIO, totalBudget))
+        if(BigDecimalUtils.isBetween(ORCAMENTO_MEDIO, ORCAMENTO_ALTO, totalBudget))
             return MEDIO_RISCO;
         if(totalMonths >= MESES_MEDIO && totalMonths <= MESES_ALTO)
             return MEDIO_RISCO;
