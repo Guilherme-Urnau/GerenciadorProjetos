@@ -43,6 +43,8 @@ public class ProjectService {
         Project entity = mapper.toProjectEntity(requestDto);
         connectManager(requestDto,entity);
         entity.setProjectStatus(ProjectStatus.getByOrder(1));
+        isValidMember(requestDto);
+        verifyMemberLimit(requestDto);
         projectRepository.save(entity);
         return mapper.toResponseDto(entity);
     }
@@ -53,7 +55,8 @@ public class ProjectService {
         ProjectStatus.validStatusChange(requestDto.projectStatus(),entity.getProjectStatus());
         mapper.updateEntityFromDto(requestDto,entity);
         connectManager(requestDto,entity);
-
+        isValidMember(requestDto);
+        verifyMemberLimit(requestDto);
         projectRepository.save(entity);
         return mapper.toResponseDto(entity);
     }
@@ -72,6 +75,26 @@ public class ProjectService {
              throw new IllegalArgumentException("Gerente do projeto deve estar cadastrado como GERENTE");
             //todo controller advice
          projectEntity.setManager(memberEntity);
+    }
+
+    private void isValidMember(ProjectRequestDto requestDto){
+        if(requestDto.members()==null || requestDto.members().isEmpty())
+            return;
+        requestDto.members().stream().forEach(member -> {
+            Long teste = projectRepository.isValidMember(member.getId());
+            if(projectRepository.isValidMember(member.getId()) >= 3)
+                throw new IllegalArgumentException("Membro não pode estar em mais de 3 projetos.");
+                //todo melhorar erro e ajustar
+        });
+    }
+
+    private void verifyMemberLimit(ProjectRequestDto requestDto){
+        if(requestDto.members() == null)
+            return;
+        if(requestDto.members().size() < 1)
+            throw new IllegalArgumentException("É necessário ter pelo menos um membro por projeto.");
+        if(requestDto.members().size() > 10)
+            throw new IllegalArgumentException("O limite de membros por projeto é 10");
     }
 
 }
