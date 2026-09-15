@@ -9,6 +9,8 @@ public record MemberResponseDto(
 
         String name,
 
-        String role
+        String role,
+
+        Long project
 
 ) {  }
