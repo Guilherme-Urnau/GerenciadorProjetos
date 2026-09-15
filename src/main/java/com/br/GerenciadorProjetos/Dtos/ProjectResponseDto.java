@@ -18,7 +18,7 @@ public record ProjectResponseDto(
 
         LocalDate estimatedEndDate,
 
-        LocalDate ActualEndDate,
+        LocalDate actualEndDate,
 
         BigDecimal totalBudget,
 
