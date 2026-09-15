@@ -44,6 +44,7 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Member> members = new ArrayList<>();
 
+    @Transient
     private ProjectRisk projectRisk;
 
     public ProjectRisk getProjectRisk() {
