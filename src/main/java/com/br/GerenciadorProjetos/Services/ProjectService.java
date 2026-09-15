@@ -1,8 +1,6 @@
 package com.br.GerenciadorProjetos.Services;
 
-import com.br.GerenciadorProjetos.Dtos.ProjectRequestDto;
-import com.br.GerenciadorProjetos.Dtos.ProjectFilterDto;
-import com.br.GerenciadorProjetos.Dtos.ProjectResponseDto;
+import com.br.GerenciadorProjetos.Dtos.*;
 import com.br.GerenciadorProjetos.Entity.Member;
 import com.br.GerenciadorProjetos.Entity.Project;
 import com.br.GerenciadorProjetos.Enums.MemberRole;
@@ -19,7 +17,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -81,7 +84,9 @@ public class ProjectService {
         if(requestDto.members()==null || requestDto.members().isEmpty())
             return;
         requestDto.members().stream().forEach(member -> {
-            Long teste = projectRepository.isValidMember(member.getId());
+            if(member.getRole() != MemberRole.FUNCIONARIO)
+                throw new WrongRoleException("Membro do projeto deve ter atribuição de FUNCIONARIO");
+
             if(projectRepository.isValidMember(member.getId()) >= 3)
                 throw new TooManyProjectsException("Membro não pode estar em mais de 3 projetos.");
         });
@@ -96,4 +101,39 @@ public class ProjectService {
             throw new WrongMemberQuantityException("O limite de membros por projeto é 10");
     }
 
+    public ProjectsReportDto getReport() {
+        List<Project> projectList = projectRepository.findAll();
+
+        List<ReportByStatusDto> reportByStatus = projectList.stream()
+                .collect(Collectors.groupingBy(Project::getProjectStatus))
+                .entrySet().stream()
+                .map(entry -> new ReportByStatusDto(
+                        entry.getKey().name(),
+                        (long) entry.getValue().size(),
+                        entry.getValue().stream()
+                                .map(Project::getTotalBudget)
+                                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                ))
+                .toList();
+
+        Long mediumDurationInDays = (long) projectList.stream()
+                .filter(p -> p.getProjectStatus() == ProjectStatus.ENCERRADO)
+                .filter(p -> p.getStartDate() != null && p.getActualEndDate() != null)
+                .mapToLong(p -> ChronoUnit.DAYS.between(p.getStartDate(), p.getActualEndDate()))
+                .average()
+                .orElse(0);
+
+        Long totalAllocatedMembers = projectList.stream()
+                .flatMap(p -> p.getMembers().stream())
+                .map(Member::getId)
+                .distinct()
+                .count();
+
+        return new ProjectsReportDto(
+                reportByStatus,
+                mediumDurationInDays,
+                totalAllocatedMembers
+        );
+
+    }
 }
