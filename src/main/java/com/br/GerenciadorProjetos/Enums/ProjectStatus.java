@@ -10,7 +10,7 @@ public enum ProjectStatus {
     EM_ANALIZE(1,"EM ANÁLIZE"),
     ANALIZE_REALIZADA(2,"ANÁLIZE REALIZADA"),
     ANALIZE_APROVADA(3,"ANÁLIZE APROVADA"),
-    INICIANDO(4,"INICIADO"),
+    INICIADO(4,"INICIADO"),
     PLANEJANDO(5,"PLANEJADO"),
     EM_ANDAMENTO(6,"EM ANDAMENTO"),
     ENCERRADO(7,"ENCERRADO"),
@@ -41,5 +41,13 @@ public enum ProjectStatus {
         throw new IllegalArgumentException("Essa alteração de status não pode ser realizada.");
          //todo melhorar erros e lembrar do controller advice
     }
+
+    public static void exclusionAllowed(ProjectStatus persistedStatus) {
+        if(persistedStatus.order >= INICIADO.order)
+            throw new IllegalArgumentException("projetos com status iniciado ou superior não podem ser excluidos");
+        //todo melhorar erros e lembrar do controller advice
+    }
+
+    //todo pensar em tirar esses metodos do enum
 
 }
