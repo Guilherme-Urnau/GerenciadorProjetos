@@ -5,6 +5,7 @@ import com.br.GerenciadorProjetos.Dtos.MemberResponseDto;
 import com.br.GerenciadorProjetos.Entity.Member;
 import com.br.GerenciadorProjetos.Entity.Project;
 import com.br.GerenciadorProjetos.Enums.MemberRole;
+import com.br.GerenciadorProjetos.Exceptions.WrongRoleException;
 import com.br.GerenciadorProjetos.Mappers.memberMapper;
 import com.br.GerenciadorProjetos.Repository.MemberRepository;
 import com.br.GerenciadorProjetos.Repository.ProjectRepository;
@@ -46,15 +47,14 @@ public class MemberService {
     private void verifyRole(String role) throws Exception {
         Boolean isValid = Arrays.stream(MemberRole.values())
                 .anyMatch(r -> r.name().equalsIgnoreCase(role));
-        if (!isValid) throw new Exception("Role incorreto");
-        //todo criar nova exceçao e colocar no controller advice
+        if (!isValid) throw new WrongRoleException("Atribuição informada não existe.");
     }
 
     private void connectProject(MemberRequestDto requestDto, Member memberEntity) {
         if(requestDto.project() == null)
             return;
         Project projectEntity = projectRepository.findById(requestDto.project())
-                .orElseThrow(() -> new IllegalArgumentException("Projeto informado não foi encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Projeto informado não foi encontrado."));
         memberEntity.getProjects().add(projectEntity);
     }
 }
