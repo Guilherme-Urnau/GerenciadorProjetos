@@ -3,13 +3,16 @@ package com.br.GerenciadorProjetos.configs;
 import com.br.GerenciadorProjetos.Exceptions.TooManyProjectsException;
 import com.br.GerenciadorProjetos.Exceptions.WrongMemberQuantityException;
 import com.br.GerenciadorProjetos.Exceptions.WrongRoleException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@org.springframework.web.bind.annotation.ControllerAdvice
-public class ControllerAdvice {
+@ControllerAdvice
+public class GlobalExceptionHandler {
 
+    /* 409 */
     @ExceptionHandler(WrongRoleException.class)
     public ResponseEntity<String> handleWrongRoleException(WrongRoleException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
@@ -21,6 +24,12 @@ public class ControllerAdvice {
     @ExceptionHandler(TooManyProjectsException.class)
     public ResponseEntity<String> handleTooManyProjectsException(TooManyProjectsException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    /* 404 */
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
 }
