@@ -1,6 +1,7 @@
 package com.br.GerenciadorProjetos.Dtos;
 
 import com.br.GerenciadorProjetos.Entity.Member;
+import com.br.GerenciadorProjetos.Enums.ProjectRisk;
 import com.br.GerenciadorProjetos.Enums.ProjectStatus;
 
 import java.math.BigDecimal;
@@ -27,5 +28,8 @@ public record ProjectResponseDto(
 
         ProjectStatus projectStatus,
 
-        List<Member> members
+        List<Member> members,
+
+        ProjectRisk projectRisk
+
 ) {}
