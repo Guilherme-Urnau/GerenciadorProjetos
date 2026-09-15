@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,8 @@ public class ProjectService {
     private final ProjectMapper mapper;
 
     public ProjectResponseDto getProjectById(Long projectId) {
-        Project entity = projectRepository.findById(projectId).get();
+        Project entity = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchElementException("Projeto não encontrado"));
         return mapper.toResponseDto(entity);
     }
 
@@ -47,7 +49,7 @@ public class ProjectService {
     public ProjectResponseDto updateProject(Long projectId, ProjectRequestDto requestDto){
         Project entity = projectRepository.findById(projectId).orElseThrow(
                 () -> new EntityNotFoundException("Projeto não encontrado, atualização cancelada."));
-        ProjectStatus.validStatusChange(requestDto.status(),entity.getProjectStatus());
+        ProjectStatus.validStatusChange(requestDto.projectStatus(),entity.getProjectStatus());
         mapper.updateEntityFromDto(requestDto,entity);
         connectManager(requestDto,entity);
 
@@ -58,6 +60,7 @@ public class ProjectService {
     public void deleteProject(Long projectId){
         Project entity = projectRepository.findById(projectId).orElseThrow(
                 () -> new EntityNotFoundException("Projeto não encontrado, nada para deletar"));
+        ProjectStatus.exclusionAllowed(entity.getProjectStatus());
         projectRepository.delete(entity);
     }
 
