@@ -1,5 +1,6 @@
 package com.br.GerenciadorProjetos.Entity;
 
+import com.br.GerenciadorProjetos.Enums.ProjectRisk;
 import com.br.GerenciadorProjetos.Enums.ProjectStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -43,4 +44,9 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Member> members = new ArrayList<>();
 
+    private ProjectRisk projectRisk;
+
+    public ProjectRisk getProjectRisk() {
+        return ProjectRisk.calculateProjectRisk(totalBudget, startDate, estimatedEndDate);
+    }
 }
