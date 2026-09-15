@@ -28,7 +28,7 @@ public record ProjectResponseDto(
 
         ProjectStatus projectStatus,
 
-        List<Member> members,
+        List<MemberResponseDto> members,
 
         ProjectRisk projectRisk
 
