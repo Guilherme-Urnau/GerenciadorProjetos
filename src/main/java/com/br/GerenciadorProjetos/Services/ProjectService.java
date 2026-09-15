@@ -7,6 +7,9 @@ import com.br.GerenciadorProjetos.Entity.Member;
 import com.br.GerenciadorProjetos.Entity.Project;
 import com.br.GerenciadorProjetos.Enums.MemberRole;
 import com.br.GerenciadorProjetos.Enums.ProjectStatus;
+import com.br.GerenciadorProjetos.Exceptions.TooManyProjectsException;
+import com.br.GerenciadorProjetos.Exceptions.WrongMemberQuantityException;
+import com.br.GerenciadorProjetos.Exceptions.WrongRoleException;
 import com.br.GerenciadorProjetos.Mappers.ProjectMapper;
 import com.br.GerenciadorProjetos.Repository.MemberRepository;
 import com.br.GerenciadorProjetos.Repository.ProjectRepository;
@@ -22,15 +25,13 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class ProjectService {
 
-    //TODO VALIDAR REGRAS DE NEGOCIO
-
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final ProjectMapper mapper;
 
     public ProjectResponseDto getProjectById(Long projectId) {
         Project entity = projectRepository.findById(projectId)
-                .orElseThrow(() -> new NoSuchElementException("Projeto não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Projeto não encontrado"));
         return mapper.toResponseDto(entity);
     }
 
@@ -72,8 +73,7 @@ public class ProjectService {
          Member memberEntity = memberRepository.findById(requestDto.manager())
                  .orElseThrow(() -> new EntityNotFoundException("Gerente não encontrado."));
          if(memberEntity.getRole() != MemberRole.GERENTE)
-             throw new IllegalArgumentException("Gerente do projeto deve estar cadastrado como GERENTE");
-            //todo controller advice
+             throw new WrongRoleException("Gerente do projeto deve estar cadastrado como GERENTE");
          projectEntity.setManager(memberEntity);
     }
 
@@ -83,8 +83,7 @@ public class ProjectService {
         requestDto.members().stream().forEach(member -> {
             Long teste = projectRepository.isValidMember(member.getId());
             if(projectRepository.isValidMember(member.getId()) >= 3)
-                throw new IllegalArgumentException("Membro não pode estar em mais de 3 projetos.");
-                //todo melhorar erro e ajustar
+                throw new TooManyProjectsException("Membro não pode estar em mais de 3 projetos.");
         });
     }
 
@@ -92,9 +91,9 @@ public class ProjectService {
         if(requestDto.members() == null)
             return;
         if(requestDto.members().size() < 1)
-            throw new IllegalArgumentException("É necessário ter pelo menos um membro por projeto.");
+            throw new WrongMemberQuantityException("É necessário ter pelo menos um membro por projeto.");
         if(requestDto.members().size() > 10)
-            throw new IllegalArgumentException("O limite de membros por projeto é 10");
+            throw new WrongMemberQuantityException("O limite de membros por projeto é 10");
     }
 
 }
