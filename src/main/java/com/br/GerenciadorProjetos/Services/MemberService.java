@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.Arrays;
+import java.util.MissingResourceException;
 
 @Service
 @RequiredArgsConstructor
@@ -50,8 +51,10 @@ public class MemberService {
     }
 
     private void connectProject(MemberRequestDto requestDto, Member memberEntity) {
+        if(requestDto.project() == null)
+            return;
         Project projectEntity = projectRepository.findById(requestDto.project())
                 .orElseThrow(() -> new IllegalArgumentException("Projeto informado não foi encontrado."));
-        memberEntity.setProject(projectEntity);
+        memberEntity.getProjects().add(projectEntity);
     }
 }
