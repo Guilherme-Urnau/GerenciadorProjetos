@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface memberMapper {
 
-    @Mapping(target = "project", ignore = true)
+    @Mapping(target = "projects", ignore = true)
     Member toMemberEntity(MemberRequestDto dto);
 
     MemberResponseDto toMemberResponseDto(Member member);
