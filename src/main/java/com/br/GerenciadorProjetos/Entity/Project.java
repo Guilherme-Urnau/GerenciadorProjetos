@@ -27,7 +27,7 @@ public class Project {
 
     private LocalDate estimatedEndDate;
 
-    private LocalDate ActualEndDate;
+    private LocalDate actualEndDate;
 
     private BigDecimal totalBudget;
 
