@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -16,9 +19,8 @@ public class Member {
 
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Project project;
+    @ManyToMany(mappedBy = "members")
+    private List<Project> projects = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

@@ -41,7 +41,12 @@ public class Project {
     @Column(nullable = false)
     private ProjectStatus projectStatus;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+            name = "project_members",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id")
+    )
     private List<Member> members = new ArrayList<>();
 
     @Transient
