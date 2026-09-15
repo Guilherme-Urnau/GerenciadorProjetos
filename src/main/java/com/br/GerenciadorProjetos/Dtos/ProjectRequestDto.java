@@ -35,7 +35,7 @@ public record ProjectRequestDto(
         @NotNull
         Long manager,
 
-        ProjectStatus status,
+        ProjectStatus projectStatus,
 
         List<Member> members
 ) {}
