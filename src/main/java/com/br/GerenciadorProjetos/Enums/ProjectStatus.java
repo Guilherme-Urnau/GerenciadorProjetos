@@ -2,6 +2,10 @@ package com.br.GerenciadorProjetos.Enums;
 
 import com.br.GerenciadorProjetos.Dtos.ProjectRequestDto;
 import com.br.GerenciadorProjetos.Entity.Project;
+import com.br.GerenciadorProjetos.Exceptions.ProjectExclusionNotAllowedException;
+import com.br.GerenciadorProjetos.Exceptions.StatusMovedWronglyException;
+import com.br.GerenciadorProjetos.Exceptions.WrongStatusException;
+import jakarta.persistence.EntityNotFoundException;
 
 import java.util.Arrays;
 
@@ -28,8 +32,7 @@ public enum ProjectStatus {
         return Arrays.stream(values())
                 .filter(status -> status.order.equals(order))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Status não encontrado."));
-        //todo melhorar erros e lembrar do controller advice
+                .orElseThrow(() -> new WrongStatusException("Status não encontrado."));
     }
 
     public static void validStatusChange(ProjectStatus incomingStatus, ProjectStatus persistedStatus) {
@@ -38,16 +41,12 @@ public enum ProjectStatus {
         if(incomingStatus.order == -1)
             return;
 
-        throw new IllegalArgumentException("Essa alteração de status não pode ser realizada.");
-         //todo melhorar erros e lembrar do controller advice
+        throw new StatusMovedWronglyException();
     }
 
     public static void exclusionAllowed(ProjectStatus persistedStatus) {
         if(persistedStatus.order >= INICIADO.order)
-            throw new IllegalArgumentException("projetos com status iniciado ou superior não podem ser excluidos");
-        //todo melhorar erros e lembrar do controller advice
+            throw new ProjectExclusionNotAllowedException();
     }
-
-    //todo pensar em tirar esses metodos do enum
 
 }
