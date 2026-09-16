@@ -6,6 +6,8 @@ import com.br.GerenciadorProjetos.Entity.Member;
 import com.br.GerenciadorProjetos.Entity.Project;
 import com.br.GerenciadorProjetos.Enums.MemberRole;
 import com.br.GerenciadorProjetos.Enums.ProjectRisk;
+import com.br.GerenciadorProjetos.Enums.ProjectStatus;
+import com.br.GerenciadorProjetos.Exceptions.ProjectExclusionNotAllowedException;
 import com.br.GerenciadorProjetos.Exceptions.WrongMemberQuantityException;
 import com.br.GerenciadorProjetos.Exceptions.WrongRoleException;
 import com.br.GerenciadorProjetos.Mappers.ProjectMapper;
@@ -18,7 +20,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -54,7 +55,6 @@ public class ProjectServiceUnitTest {
         verify(projectRepository, never()).save(any());
     }
 
-    //deve causar erro de muitos funcionarios em um só projeto.
     @Test
     public void erroMembrosDemais_criacaoProjeto(){
 
@@ -116,6 +116,7 @@ public class ProjectServiceUnitTest {
 
         assertThrows(WrongRoleException.class, () -> service.createProject(requestDto));
         verify(projectRepository, never()).save(any());
+
     }
 
     @Test
@@ -127,6 +128,7 @@ public class ProjectServiceUnitTest {
         project.setEstimatedEndDate(LocalDate.of(2026,2,1));
 
         assertEquals(ProjectRisk.BAIXO_RISCO, project.getProjectRisk());
+
     }
 
     @Test
@@ -138,6 +140,7 @@ public class ProjectServiceUnitTest {
         project.setEstimatedEndDate(LocalDate.of(2026,3,2));
 
         assertEquals(ProjectRisk.BAIXO_RISCO, project.getProjectRisk());
+
     }
 
 
@@ -150,7 +153,63 @@ public class ProjectServiceUnitTest {
         project.setEstimatedEndDate(LocalDate.of(2026,5,2));
 
         assertEquals(ProjectRisk.MEDIO_RISCO, project.getProjectRisk());
+
     }
+
+    @Test
+    public void projetoComRiscoAlto_600MileQuatroMeses(){
+
+        Project project = new Project();
+        project.setTotalBudget(BigDecimal.valueOf(600000));
+        project.setStartDate(LocalDate.of(2026,1,1));
+        project.setEstimatedEndDate(LocalDate.of(2026,5,2));
+
+        assertEquals(ProjectRisk.ALTO_RISCO, project.getProjectRisk());
+
+    }
+
+    @Test
+    public void projetoComRiscoAlto_400MileSeteMeses(){
+
+        Project project = new Project();
+        project.setTotalBudget(BigDecimal.valueOf(400000));
+        project.setStartDate(LocalDate.of(2026,1,1));
+        project.setEstimatedEndDate(LocalDate.of(2026,8,2));
+
+        assertEquals(ProjectRisk.ALTO_RISCO, project.getProjectRisk());
+
+    }
+
+    @Test
+    public void projetoComRiscoAlto_600MileSeteMeses(){
+
+        Project project = new Project();
+        project.setTotalBudget(BigDecimal.valueOf(600000));
+        project.setStartDate(LocalDate.of(2026,1,1));
+        project.setEstimatedEndDate(LocalDate.of(2026,8,2));
+
+        assertEquals(ProjectRisk.ALTO_RISCO, project.getProjectRisk());
+
+    }
+
+    @Test
+    public void erroStatusImpedeExclusao_exclusaoProjeto(){
+
+        Project project = new Project();
+        project.setProjectStatus(ProjectStatus.INICIADO);
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+
+        assertThrows(ProjectExclusionNotAllowedException.class, () -> service.deleteProject(1L));
+        verify(projectRepository, never()).save(any());
+
+    }
+
+
+
+
+
+
+
 
 
 
