@@ -204,6 +204,23 @@ public class ProjectServiceUnitTest {
 
     }
 
+    @Test
+    public void validarExclusaoProjeto(){
+
+        Project project = new Project();
+        project.setProjectStatus(ProjectStatus.EM_ANALIZE);
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+
+        service.deleteProject(1L);
+
+        verify(projectRepository, times(1)).delete(project);
+    }
+
+    @Test
+    public void erro(){}
+
+
+
 
 
 
