@@ -1,13 +1,13 @@
 package com.br.GerenciadorProjetos;
 
 import com.br.GerenciadorProjetos.Dtos.ProjectRequestDto;
-import com.br.GerenciadorProjetos.Dtos.ProjectResponseDto;
 import com.br.GerenciadorProjetos.Entity.Member;
 import com.br.GerenciadorProjetos.Entity.Project;
 import com.br.GerenciadorProjetos.Enums.MemberRole;
 import com.br.GerenciadorProjetos.Enums.ProjectRisk;
 import com.br.GerenciadorProjetos.Enums.ProjectStatus;
 import com.br.GerenciadorProjetos.Exceptions.ProjectExclusionNotAllowedException;
+import com.br.GerenciadorProjetos.Exceptions.StatusMovedWronglyException;
 import com.br.GerenciadorProjetos.Exceptions.WrongMemberQuantityException;
 import com.br.GerenciadorProjetos.Exceptions.WrongRoleException;
 import com.br.GerenciadorProjetos.Mappers.ProjectMapper;
@@ -264,7 +264,53 @@ public class ProjectServiceUnitTest {
     }
 
     @Test
-    public void erro(){}
+    public void validarTrocaDeStatusProjeto(){
+
+        Member gerente = new Member();
+        gerente.setId(1L);
+        gerente.setRole(MemberRole.GERENTE);
+
+        Member funcionario = new Member();
+        funcionario.setId(2L);
+        funcionario.setRole(MemberRole.FUNCIONARIO);
+
+        Project project = new Project();
+        project.setProjectStatus(ProjectStatus.INICIADO);
+        project.setManager(gerente);
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(memberRepository.findById(0L)).thenReturn(Optional.of(gerente));
+        ProjectRequestDto requestDto = mock(ProjectRequestDto.class);
+        when(requestDto.projectStatus()).thenReturn(ProjectStatus.PLANEJANDO);
+        when(requestDto.members()).thenReturn(List.of(funcionario));
+
+        service.updateProject(1L,requestDto);
+
+        verify(projectRepository, times(1)).save(project);
+
+    }
+
+    @Test
+    public void Erro_TrocaDeStatusProjeto(){
+
+        Member gerente = new Member();
+        gerente.setId(1L);
+        gerente.setRole(MemberRole.GERENTE);
+
+        Member funcionario = new Member();
+        funcionario.setId(2L);
+        funcionario.setRole(MemberRole.FUNCIONARIO);
+
+        Project project = new Project();
+        project.setProjectStatus(ProjectStatus.INICIADO);
+        project.setManager(gerente);
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        ProjectRequestDto requestDto = mock(ProjectRequestDto.class);
+        when(requestDto.projectStatus()).thenReturn(ProjectStatus.ENCERRADO);
+
+        assertThrows(StatusMovedWronglyException.class, () -> service.updateProject(1L,requestDto));
+        verify(projectRepository, never()).save(any());
+
+    }
 
 
 
