@@ -200,7 +200,7 @@ public class ProjectServiceUnitTest {
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
 
         assertThrows(ProjectExclusionNotAllowedException.class, () -> service.deleteProject(1L));
-        verify(projectRepository, never()).save(any());
+        verify(projectRepository, never()).delete(project);
 
     }
 
