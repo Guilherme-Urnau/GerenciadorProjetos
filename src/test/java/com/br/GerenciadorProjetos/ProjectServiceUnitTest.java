@@ -80,6 +80,30 @@ public class ProjectServiceUnitTest {
     }
 
     @Test
+    public void quantiaDeMembrosCorreta_criacaoProjeto(){
+
+        Member gerente = new Member();
+        gerente.setId(1L);
+        gerente.setRole(MemberRole.GERENTE);
+
+        Member funcionario = new Member();
+        funcionario.setId(2L);
+        funcionario.setRole(MemberRole.FUNCIONARIO);
+
+        Project project = new Project();
+        ProjectRequestDto requestDto = mock(ProjectRequestDto.class);
+        when(requestDto.manager()).thenReturn(1L);
+        when(requestDto.members()).thenReturn(List.of());
+        when(projectMapper.toProjectEntity(requestDto)).thenReturn(project);
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(gerente));
+        when(requestDto.members()).thenReturn(List.of(funcionario, funcionario, funcionario));
+
+        service.createProject(requestDto);
+
+        verify(projectRepository, times(1)).save(project);
+    }
+
+    @Test
     public void erroGerenteAtribuicaoErrada_criacaoProjeto(){
 
         Member gerente = new Member();
@@ -94,6 +118,29 @@ public class ProjectServiceUnitTest {
 
         assertThrows(WrongRoleException.class, () -> service.createProject(requestDto));
         verify(projectRepository, never()).save(any());
+    }
+
+    @Test
+    public void gerenteComAtribuicaoCorreta_criacaoProjeto(){
+
+        Member gerente = new Member();
+        gerente.setId(1L);
+        gerente.setRole(MemberRole.GERENTE);
+
+        Member funcionario = new Member();
+        funcionario.setId(2L);
+        funcionario.setRole(MemberRole.FUNCIONARIO);
+
+        Project project = new Project();
+        ProjectRequestDto requestDto = mock(ProjectRequestDto.class);
+        when(requestDto.manager()).thenReturn(1L);
+        when(projectMapper.toProjectEntity(requestDto)).thenReturn(project);
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(gerente));
+        when(requestDto.members()).thenReturn(List.of(funcionario));
+
+        service.createProject(requestDto);
+
+        verify(projectRepository, times(1)).save(project);
     }
 
     @Test
