@@ -1,9 +1,6 @@
 package com.br.GerenciadorProjetos.configs;
 
-import com.br.GerenciadorProjetos.Exceptions.TooManyProjectsException;
-import com.br.GerenciadorProjetos.Exceptions.WrongMemberQuantityException;
-import com.br.GerenciadorProjetos.Exceptions.WrongRoleException;
-import com.br.GerenciadorProjetos.Exceptions.WrongStatusException;
+import com.br.GerenciadorProjetos.Exceptions.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +25,10 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(WrongStatusException.class)
     public ResponseEntity<String> handleWrongStatusException(WrongStatusException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+    @ExceptionHandler(StatusMovedWronglyException.class)
+    public ResponseEntity<String> handleStatusMovedWronglyException(StatusMovedWronglyException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
